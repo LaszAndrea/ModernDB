@@ -1,0 +1,253 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+
+    <!--Egyszerű elemek-->
+
+    <xs:element name="folyometer" type="xs:int" />
+    <xs:element name="tipus" type="nyomtatotipTipus" />
+    <xs:element name="festekfelhasznalas" type="felhasznTipusok" />
+    <xs:element name="raszterhenger" type="raszterhengerTipus" />
+
+    <xs:element name="lejarat" type="idoTipus" />
+    <xs:element name="raktaron" type="felhasznTipusok" />
+    <xs:element name="gyarto" type="xs:string" />
+
+    <xs:element name="termeknev" type="xs:string" />
+    <xs:element name="mennyiseg" type="felhasznTipusok" />
+    <xs:element name="papirmin" type="felhasznTipusok" />
+
+    <xs:element name="nev" type="xs:string" />
+    <xs:element name="szarmazas" type="xs:string" />
+    <xs:element name="isz" type="xs:int" />
+    <xs:element name="utca" type="xs:string" />
+
+    <xs:element name="telephely" type="xs:string" />
+    <xs:element name="alapitas" type="xs:int" />
+
+    <xs:element name="elkeszites" type="idoTipus" />
+    <xs:element name="szinek" type="xs:string" />
+    <xs:element name="tervezo" type="xs:string" />
+
+    <xs:element name="szuletes" type="xs:int" />
+    <xs:element name="szerzodese" type="xs:int"  />
+
+    <xs:element name="rendeles" type="idoTipus" />
+
+    <!--Saját típusok-->
+
+    <xs:simpleType name="nyomtatotipTipus">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="VF001" />
+            <xs:enumeration value="VF002" />
+            <xs:enumeration value="VF003" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="raszterhengerTipus">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[1][0-9][0-9]/[0-9]+" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="idoTipus">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="([12]\d{3}.(0[1-9]|1[0-2]).(0[1-9]|[12]\d|3[01]))" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="felhasznTipusok">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[A-Za-z0-9]+" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="adoszamTipus">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9][0-9][0-9][0-9][0-9]" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="tajszamTipus">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <!--Felépítés-->
+
+    <xs:element name="tasakgyartas">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="nyomtatogep" minOccurs="1" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element ref="folyometer" />
+                            <xs:element ref="tipus" />
+                            <xs:element ref="festekfelhasznalas" />
+                            <xs:element ref="raszterhenger" minOccurs="1" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                        <xs:attribute name="termeknev" type="xs:string" />
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="festek" minOccurs="1" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element ref="lejarat" />
+                            <xs:element ref="raktaron" />
+                            <xs:element ref="gyarto" minOccurs="1" maxOccurs="unbounded" />
+                        </xs:sequence>
+                        <xs:attribute name="pantonszam" type="felhasznTipusok" />
+                        <xs:attribute name="felhasznalas" type="xs:string" />
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="tasakrendeles" minOccurs="1" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element ref="termeknev" />
+                            <xs:element ref="mennyiseg" />
+                            <xs:element ref="papirmin" />
+                        </xs:sequence>
+                        <xs:attribute name="tasakID" type="xs:int" />
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="vevo" minOccurs="1" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element ref="nev" />
+                            <xs:element ref="szarmazas" />
+                            <xs:element name="telephely" minOccurs="1" maxOccurs="2">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element ref="isz" />
+                                        <xs:element ref="utca" />
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element> 
+                        </xs:sequence>
+                        <xs:attribute name="adoszam" type="adoszamTipus" />
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="gyar" minOccurs="1" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element ref="nev" />
+                            <xs:element ref="telephely" />
+                            <xs:element ref="alapitas" />
+                        </xs:sequence>
+                        <xs:attribute name="gyAdoszam" type="adoszamTipus" />
+                        <xs:attribute name="vGy" type="adoszamTipus" />
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="logo" minOccurs="1" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element ref="elkeszites" />
+                            <xs:element ref="szinek" minOccurs="1" maxOccurs="unbounded" />
+                            <xs:element ref="tervezo" />
+                        </xs:sequence>
+                        <xs:attribute name="logoId" type="xs:int" />
+                        <xs:attribute name="gyL" type="adoszamTipus" />
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="tulajdonos" minOccurs="1" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element ref="nev" />
+                            <xs:element ref="szuletes" />
+                            <xs:element ref="szerzodese" />
+                        </xs:sequence>
+                        <xs:attribute name="tajszam" type="tajszamTipus" />
+                        <xs:attribute name="tGy" type="adoszamTipus" />
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="szerzodes" minOccurs="1" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element ref="rendeles" />
+                        </xs:sequence>
+                        <xs:attribute name="tNev" type="xs:string" />
+                        <xs:attribute name="tasakID" type="xs:int" />
+                        <xs:attribute name="adoszam" type="adoszamTipus" />
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+
+        <!--Kulcsok-->
+
+        <xs:key name="nyomtatogep_kulcs">
+            <xs:selector xpath="nyomtatogep" />
+            <xs:field xpath="@termeknev" />
+        </xs:key>
+
+        <xs:key name="festek_kulcs">
+            <xs:selector xpath="festek" />
+            <xs:field xpath="@pantonszam" />
+        </xs:key>
+
+        <xs:key name="tasakrendeles_kulcs">
+            <xs:selector xpath="tasakrendeles" />
+            <xs:field xpath="@tasakID" />
+        </xs:key>
+
+        <xs:key name="vevo_kulcs">
+            <xs:selector xpath="vevo" />
+            <xs:field xpath="@adoszam" />
+        </xs:key>
+
+        <xs:key name="gyar_kulcs">
+            <xs:selector xpath="gyar" />
+            <xs:field xpath="@gyAdoszam" />
+        </xs:key>
+
+        <xs:key name="logo_kulcs">
+            <xs:selector xpath="logo" />
+            <xs:field xpath="@logoId" />
+        </xs:key>
+
+        <xs:key name="tulajdonos_kulcs">
+            <xs:selector xpath="tulajdonos" />
+            <xs:field xpath="@tajszam" />
+        </xs:key>
+
+        <!--Idegen kulcsok-->
+
+        <xs:keyref refer="nyomtatogep_kulcs" name="nyomtatogep_idegen_kulcs">
+            <xs:selector xpath="festek" />
+            <xs:field xpath="@felhasznalas" />
+        </xs:keyref>
+
+        <xs:keyref refer="vevo_kulcs" name="vevo_idegen_kulcs">
+            <xs:selector xpath="gyar" />
+            <xs:field xpath="@vGy" />
+        </xs:keyref>
+
+        <xs:keyref refer="gyar_kulcs" name="gyar_tulajdonos_idegen_kulcs">
+            <xs:selector xpath="tulajdonos" />
+            <xs:field xpath="@tGy" />
+        </xs:keyref>
+
+        <xs:keyref refer="nyomtatogep_kulcs" name="szerzodes_nyomtatogep_idegen_kulcs">
+            <xs:selector xpath="szerzodes" />
+            <xs:field xpath="@tNev" />
+        </xs:keyref>
+
+        <xs:keyref refer="vevo_kulcs" name="szerzodes_vevo_idegen_kulcs">
+            <xs:selector xpath="szerzodes" />
+            <xs:field xpath="@adoszam" />
+        </xs:keyref>
+
+        <xs:keyref refer="tasakrendeles_kulcs" name="szerzodes_tasakrendeles_idegen_kulcs">
+            <xs:selector xpath="szerzodes" />
+            <xs:field xpath="@tasakID" />
+        </xs:keyref>
+
+        <!--1:1-->
+
+        <xs:unique name="unique_logo">
+            <xs:selector xpath="logo" />
+            <xs:field xpath="@gyL" />
+        </xs:unique>
+
+    </xs:element>
+
+</xs:schema>

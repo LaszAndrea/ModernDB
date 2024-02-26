@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<tasakgyartas xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="XMLSchemaDJ7PNE.xsd">
+
+
+    <!--Nyomtatógépek-->
+
+    <nyomtatogep termeknev="1kg Gyermelyi finomliszt">
+        <folyometer>2500</folyometer>
+        <tipus>VF001</tipus>
+        <festekfelhasznalas>5kg</festekfelhasznalas>
+        <raszterhenger>180/10</raszterhenger>
+        <raszterhenger>120/8</raszterhenger>
+    </nyomtatogep>
+
+    <nyomtatogep termeknev="2kg Hajdú búzadara">
+        <folyometer>12000</folyometer>
+        <tipus>VF001</tipus>
+        <festekfelhasznalas>8kg</festekfelhasznalas>
+        <raszterhenger>180/10</raszterhenger>
+    </nyomtatogep>
+
+    <nyomtatogep termeknev="5kg Auschan Optimum">
+        <folyometer>20000</folyometer>
+        <tipus>VF002</tipus>
+        <festekfelhasznalas>14kg</festekfelhasznalas>
+        <raszterhenger>120/8</raszterhenger>
+        <raszterhenger>110/2</raszterhenger>
+    </nyomtatogep>
+
+    <!--Festékek-->
+
+    <festek pantonszam="P1495" felhasznalas="1kg Gyermelyi finomliszt">
+        <lejarat>2030.10.15</lejarat>
+        <raktaron>150kg</raktaron>
+        <gyarto>Colorprint</gyarto>
+    </festek>
+
+    <festek pantonszam="P706" felhasznalas="1kg Gyermelyi finomliszt">
+        <lejarat>2032.08.01</lejarat>
+        <raktaron>450kg</raktaron>
+        <gyarto>Colorprint</gyarto>
+        <gyarto>Poli-Farbe</gyarto>
+    </festek>
+
+    <festek pantonszam="P1400" felhasznalas="2kg Hajdú búzadara">
+        <lejarat>2028.02.22</lejarat>
+        <raktaron>150kg</raktaron>
+        <gyarto>Colorprint</gyarto>
+    </festek>
+
+    <festek pantonszam="P632" felhasznalas="5kg Auschan Optimum">
+        <lejarat>2024.07.19</lejarat>
+        <raktaron>100kg</raktaron>
+        <gyarto>Colorprint</gyarto>
+    </festek>
+
+    <festek pantonszam="P935" felhasznalas="5kg Auschan Optimum">
+        <lejarat>2026.12.31</lejarat>
+        <raktaron>50kg</raktaron>
+        <gyarto>Colorprint</gyarto>
+    </festek>
+
+    <festek pantonszam="P1250" felhasznalas="5kg Auschan Optimum">
+        <lejarat>2032.12.15</lejarat>
+        <raktaron>80kg</raktaron>
+        <gyarto>Colorprint</gyarto>
+    </festek>
+
+    <!--Tasakrendelések-->
+
+    <tasakrendeles tasakID="1">
+        <termeknev>1kg Gyermelyi finomliszt</termeknev>
+        <mennyiseg>150000db</mennyiseg>
+        <papirmin>80gr</papirmin>
+    </tasakrendeles>
+
+    <tasakrendeles tasakID="2">
+        <termeknev>2kg Hajdú búzadara</termeknev>
+        <mennyiseg>100000db</mennyiseg>
+        <papirmin>70gr</papirmin>
+    </tasakrendeles>
+
+    <tasakrendeles tasakID="3">
+        <termeknev>5kg Auschan Optimum</termeknev>
+        <mennyiseg>50000db</mennyiseg>
+        <papirmin>100gr</papirmin>
+    </tasakrendeles>
+
+    <!--Vevők-->
+
+    <vevo adoszam="77777777-77-777777">
+        <nev>Egyes cég</nev>
+        <szarmazas>Magyarország</szarmazas>
+        <telephely>
+            <isz>4090</isz>
+            <utca>Kossuth</utca>
+        </telephely>
+        <telephely>
+            <isz>4090</isz>
+            <utca>Bethlen</utca>
+        </telephely>
+    </vevo>
+
+    <vevo adoszam="22222222-22-222222">
+        <nev>Kettes cég</nev>
+        <szarmazas>Magyarország</szarmazas>
+        <telephely>
+            <isz>3515</isz>
+            <utca>Diósgyőri</utca>
+        </telephely>
+    </vevo>
+
+    <vevo adoszam="88888888-22-787878">
+        <nev>Hármas cég</nev>
+        <szarmazas>Magyarország</szarmazas>
+        <telephely>
+            <isz>2080</isz>
+            <utca>Petőfi</utca>
+        </telephely>
+    </vevo>
+
+    <!--Gyárak-->
+
+    <gyar gyAdoszam="12345678-22-654321" vGy="77777777-77-777777">
+        <nev>Egyes gyár</nev>
+        <telephely>Felsősima</telephely>
+        <alapitas>2002</alapitas>
+    </gyar>
+
+    <gyar gyAdoszam="13151614-32-956348" vGy="77777777-77-777777">
+        <nev>Kettes gyár</nev>
+        <telephely>Miskolc</telephely>
+        <alapitas>2008</alapitas>
+    </gyar>
+
+    <gyar gyAdoszam="32945817-68-164872" vGy="22222222-22-222222">
+        <nev>Hármas gyár</nev>
+        <telephely>Debrecen</telephely>
+        <alapitas>2016</alapitas>
+    </gyar>
+
+    <gyar gyAdoszam="62599875-77-121212" vGy="88888888-22-787878">
+        <nev>Négyes gyár</nev>
+        <telephely>Debrecen</telephely>
+        <alapitas>2018</alapitas>
+    </gyar>
+
+    <!--Logók-->
+
+    <logo logoId="1" gyL="12345678-22-654321">
+        <elkeszites>2001.12.15</elkeszites>
+        <szinek>Piros</szinek>
+        <szinek>Kék</szinek>
+        <szinek>Zöld</szinek>
+        <tervezo>Kiss Péter</tervezo>
+    </logo>
+
+    <logo logoId="2" gyL="13151614-32-956348">
+        <elkeszites>2007.12.20</elkeszites>
+        <szinek>Fehér</szinek>
+        <szinek>Zöld</szinek>
+        <tervezo>Nagy Zoltán</tervezo>
+    </logo>
+
+    <logo logoId="3" gyL="32945817-68-164872">
+        <elkeszites>2016.02.08</elkeszites>
+        <szinek>Vörös</szinek>
+        <szinek>Fehér</szinek>
+        <szinek>Fekete</szinek>
+        <tervezo>Bogyó Annamária</tervezo>
+    </logo>
+
+    <logo logoId="4" gyL="62599875-77-121212">
+        <elkeszites>2018.06.26</elkeszites>
+        <szinek>Fehér</szinek>
+        <szinek>Fekete</szinek>
+        <tervezo>Varga Krisztina</tervezo>
+    </logo>
+
+    <!--Tulajdonosok-->
+
+    <tulajdonos tajszam="119075100" tGy="12345678-22-654321">
+        <nev>Terplán Zénó</nev>
+        <szuletes>1982</szuletes>
+        <szerzodese>2002</szerzodese>
+    </tulajdonos>
+
+    <tulajdonos tajszam="117080205" tGy="13151614-32-956348">
+        <nev>Tóth László</nev>
+        <szuletes>1970</szuletes>
+        <szerzodese>1993</szerzodese>
+    </tulajdonos>
+
+    <tulajdonos tajszam="120154203" tGy="32945817-68-164872">
+        <nev>Reszegi Ivett</nev>
+        <szuletes>1969</szuletes>
+        <szerzodese>2000</szerzodese>
+    </tulajdonos>
+
+    <tulajdonos tajszam="120005203" tGy="62599875-77-121212">
+        <nev>Balogh Panna</nev>
+        <szuletes>1993</szuletes>
+        <szerzodese>2012</szerzodese>
+    </tulajdonos>
+
+    <!--Szerződés kapcsolat-->
+
+    <szerzodes tNev="1kg Gyermelyi finomliszt" tasakID="1" adoszam="77777777-77-777777">
+        <rendeles>2022.09.15</rendeles>
+    </szerzodes>
+
+    <szerzodes tNev="2kg Hajdú búzadara" tasakID="2" adoszam="77777777-77-777777">
+        <rendeles>2022.09.18</rendeles>
+    </szerzodes>
+
+    <szerzodes tNev="5kg Auschan Optimum" tasakID="3" adoszam="88888888-22-787878">
+        <rendeles>2022.10.06</rendeles>
+    </szerzodes>
+
+    <szerzodes tNev="5kg Auschan Optimum" tasakID="3" adoszam="22222222-22-222222">
+        <rendeles>2022.10.03</rendeles>
+    </szerzodes>
+
+</tasakgyartas>
