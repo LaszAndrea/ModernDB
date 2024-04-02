@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<mapper namespace="com.database.FactoryMapper">        
+        <resultMap id="factoryResult" type="factory">
+            <id property="FTaxnumber" column="FTaxnumber"/>
+            <result property="FoundationDate" column="FoundationDate"/>
+            <result property="fName" column="fName"/>
+            <result property="Premise" column="Premise"/>
+        </resultMap>
+        
+        <select id="findAllFactories" resultType="factory" resultMap="factoryResult">
+        	SELECT * FROM Factory;
+    	</select>
+    	
+    	<select id="findFactoryById" parameterType="long" resultType="factory" resultMap="factoryResult">
+            SELECT FTaxnumber, FoundationDate, fName, Premise FROM Factory WHERE FTaxnumber = #{factoryId}
+        </select>
+    	
+    	<delete id="deleteFactoryById" parameterType="long">
+		    DELETE FROM Factory WHERE FTaxnumber = #{factoryId};
+		</delete>
+		
+		<insert id="insertFactory" parameterType="factory" keyProperty="FTaxnumber">
+            INSERT into Factory(FTaxnumber, FoundationDate, fName, Premise) 
+            	VALUES(#{FTaxnumber},#{FoundationDate},#{fName},#{Premise})
+        </insert>
+        
+    </mapper>

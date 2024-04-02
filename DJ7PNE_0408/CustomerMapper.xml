@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<mapper namespace="com.database.CustomerMapper">        
+        <resultMap id="customerResult" type="customer">
+            <id property="Taxnumber" column="Taxnumber"/>
+            <result property="Named" column="Named"/>
+            <result property="Origin" column="Origin"/>
+            <result property="Postalcode" column="Postalcode"/>
+            <result property="Street" column="Street"/>
+        </resultMap>
+        
+        <select id="findAllCustomer" resultType="customer" resultMap="customerResult">
+            SELECT Taxnumber, Named, Origin, Postalcode, Street FROM Customer
+        </select>
+        
+        <select id="findCustomerById" parameterType="long" resultType="customer" resultMap="customerResult">
+            SELECT Taxnumber, Named, Origin, Postalcode, Street FROM Customer WHERE Taxnumber = #{customerId}
+        </select>
+        
+        <insert id="insertCustomer" parameterType="customer" keyProperty="Taxnumber">
+            INSERT into Customer(Taxnumber, Named, Origin, Postalcode, Street) 
+            	VALUES(#{Taxnumber},#{Named},#{Origin},#{Postalcode},#{Street})
+        </insert>
+        
+    </mapper>
