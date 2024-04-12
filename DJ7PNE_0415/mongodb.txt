@@ -1,0 +1,123 @@
+//adatbázis kiválasztása
+//USE "DJ7PNE";
+
+//customers kollekció létrehozása
+db.createCollection("customers");
+db.customers.insertOne({
+    _id: "444",
+    name: "customer",
+    origin: "england",
+    place: { postalcode: "37624", street: "Buckingham" },
+});
+
+db.customers.insertMany([
+  {
+    _id : "000",
+    name : "first customer",
+    origin : "hungary",
+    place : {
+        postalcode : "4090",
+        street : "Abbey"
+    }
+  },
+  {
+    _id : "111",
+    name : "second customer",
+    origin : "hungary",
+    place : {
+        postalcode : "4200",
+        street : "London"
+    }
+  },
+  {
+    _id : "222",
+    name : "third customer",
+    origin : "germany",
+    place : {
+        postalcode : "24124",
+        street : "Frankfurt"
+    }
+  }
+]);
+
+// factories kollekció létrehozása
+db.createCollection("factory");
+db.factory.insertOne({
+    _id: "004",
+    name: "f factory",
+    place: "switzerland",
+    foundation_date: "2010. 04. 23",
+});
+
+
+db.factory.insertMany([
+  {
+    _id : "001",
+    name : "f factory",
+    place : "hungary",
+    foundation_date : "2020. 07. 03"
+  },
+  {
+    _id : "002",
+    name : "s factory",
+    place : "england",
+    foundation_date : "2000. 02. 09"
+  },
+  {
+    _id : "003",
+    name : "t factory",
+    place : "england",
+    foundation_date : "2004. 11. 14"
+  }
+]);
+
+//idegenkulcs mezők hozzáadása
+db.customers.updateMany({}, { $set: { factory_id: [] } });
+db.factory.updateMany({}, { $set: { customer_id: [] } });
+
+//idegenkulcs mezők kitöltése
+db.customers.updateOne({_id: "444"}, {$set: {factory_id: [004]}});
+db.customers.updateOne({_id: "000"}, {$set: {factory_id: [001, 002]}});
+db.customers.updateOne({_id: "111"}, {$set: {factory_id: [002]}});
+
+db.factory.updateOne({_id: "004"}, {$set: {customer_id: [444]}});
+db.factory.updateOne({_id: "001"}, {$set: {customer_id: [000]}});
+db.factory.updateOne({_id: "002"}, {$set: {customer_id: [111, 000]}});
+
+// a gyárakhoz egy új mezőt ad állapot néven
+db.factory.updateMany({}, { $set: { allapot: "uj" } });
+
+// a 2004 előtt alapított gyárak állapotát túl régire állítja
+db.factory.updateMany({ foundation_date: { $lt: "2004" } }, { $set: { allapot: "tul_regi" } });
+
+// törli a túl régi állapotú gyárakat
+db.factory.deleteMany({ allapot: "tul_regi" });
+
+//azok a vevők, akiknek több, mint egy kapcsolata van gyárral
+db.customers.aggregate([
+  {
+    $lookup: {
+      from: "factory",
+      localField: "_id",
+      foreignField: "customer_id",
+      as: "factoryList"
+    }
+  },
+  {
+    $project: {
+      _id: 1,
+      name: 1,
+      numberOfFactories: { $size: "$factoryList" }
+    }
+  },
+  {
+    $match: {
+      numberOfFactories: { $gt: 1 }
+    }
+  }
+]);
+
+
+
+
+
