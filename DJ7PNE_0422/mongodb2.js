@@ -101,7 +101,7 @@ db.factory.aggregate(
 )
 
 //hány factory rendelkezik helyenként "tul_regi" státusszal
-db.cars.aggregate([
+db.factory.aggregate([
   { $match: { status: "sérült" } }, // Csak a sérült autókat vesszük figyelembe
   { $group: { _id: "$type", count: { $sum: 1 } } }, // Csoportosítás típus szerint és számolás
   { $sort: { count: -1 } } // Csökkenő sorrendbe rendezés a számok alapján
