@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<mapper namespace="com.database.CFMapper">
+		<resultMap id="cfResult" type="cf">
+		    <result property="FTaxnumberCF" column="FTaxnumber"/>
+		    <result property="TaxnumberCF" column="Taxnumber"/>
+		</resultMap>
+		
+		<resultMap id="factoryResult" type="factory">
+            <id property="FTaxnumber" column="FTaxnumber"/>
+            <result property="FoundationDate" column="FoundationDate"/>
+            <result property="fName" column="fName"/>
+            <result property="Premise" column="Premise"/>
+        </resultMap>
+
+	    <select id="findAllFactoryCustomerRelationships" resultMap="cfResult">
+	        SELECT f.FTaxnumber, c.Taxnumber
+	        FROM Factory f
+	        INNER JOIN CF ON f.FTaxnumber = CF.FTaxnumberCF
+	        INNER JOIN Customer c ON CF.TaxnumberCF = c.Taxnumber;
+	    </select>
+	    
+	    <select id="findFactoriesWithCustomers" resultMap="factoryResult">
+		    SELECT DISTINCT f.*
+		    FROM Factory f
+		    INNER JOIN CF ON f.FTaxnumber = CF.FTaxnumberCF;
+		</select>
+		
+		<delete id="deleteFactoryRelationship" parameterType="long">
+		    DELETE FROM CF WHERE FTaxnumberCF = #{factoryId};
+		</delete>
+		
+		<insert id="insertRelationship" parameterType="cf">
+            INSERT into CF(FTaxnumberCF, TaxnumberCF) 
+            	VALUES(#{FTaxnumberCF},#{TaxnumberCF})
+        </insert>
+        
+    </mapper>

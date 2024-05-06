@@ -1,0 +1,249 @@
+//adatbázis kiválasztása
+//USE "DJ7PNE";
+
+//customers kollekció létrehozása
+db.createCollection("customers");
+db.customers.insertOne({
+    _id: "444",
+    name: "customer",
+    origin: "england",
+    place: { postalcode: "37624", street: "Buckingham" },
+});
+
+db.customers.insertMany([
+  {
+    _id : "000",
+    name : "first customer",
+    origin : "hungary",
+    place : {
+        postalcode : "4090",
+        street : "Abbey"
+    }
+  },
+  {
+    _id : "111",
+    name : "second customer",
+    origin : "hungary",
+    place : {
+        postalcode : "4200",
+        street : "London"
+    }
+  },
+  {
+    _id : "222",
+    name : "third customer",
+    origin : "germany",
+    place : {
+        postalcode : "24124",
+        street : "Frankfurt"
+    }
+  }
+]);
+
+// factories kollekció létrehozása
+db.createCollection("factory");
+db.factory.insertOne({
+    _id: "004",
+    name: "f factory",
+    place: "switzerland",
+    foundation_date: "2010. 04. 23",
+});
+
+
+db.factory.insertMany([
+  {
+    _id : "001",
+    name : "f factory",
+    place : "hungary",
+    foundation_date : "2020. 07. 03"
+  },
+  {
+    _id : "002",
+    name : "s factory",
+    place : "england",
+    foundation_date : "2000. 02. 09"
+  },
+  {
+    _id : "003",
+    name : "t factory",
+    place : "england",
+    foundation_date : "2004. 11. 14"
+  }
+]);
+
+//idegenkulcs mezők hozzáadása
+db.customers.updateMany({}, { $set: { factory_id: [] } });
+db.factory.updateMany({}, { $set: { customer_id: [] } });
+
+//idegenkulcs mezők kitöltése
+db.customers.updateOne({_id: "444"}, {$set: {factory_id: [004]}});
+db.customers.updateOne({_id: "000"}, {$set: {factory_id: [001, 002]}});
+db.customers.updateOne({_id: "111"}, {$set: {factory_id: [002]}});
+
+db.factory.updateOne({_id: "004"}, {$set: {customer_id: [444]}});
+db.factory.updateOne({_id: "001"}, {$set: {customer_id: [000]}});
+db.factory.updateOne({_id: "002"}, {$set: {customer_id: [111, 000]}});
+
+// a gyárakhoz egy új mezőt ad állapot néven
+db.factory.updateMany({}, { $set: { allapot: "uj" } });
+
+// a 2004 előtt alapított gyárak állapotát túl régire állítja
+db.factory.updateMany({ foundation_date: { $lt: "2004" } }, { $set: { allapot: "tul_regi" } });
+
+// törli a túl régi állapotú gyárakat
+db.factory.deleteMany({ allapot: "tul_regi" });
+
+//azok a vevők, akiknek több, mint egy kapcsolata van gyárral
+db.customers.aggregate([
+  {
+    $lookup: {
+      from: "factory",
+      localField: "_id",
+      foreignField: "customer_id",
+      as: "factoryList"
+    }
+  },
+  {
+    $project: {
+      _id: 1,
+      name: 1,
+      numberOfFactories: { $size: "$factoryList" }
+    }
+  },
+  {
+    $match: {
+      numberOfFactories: { $gt: 1 }
+    }
+  }
+]);
+
+
+// metódusok törlése ha már léteznek
+db.system.js.remove({ _id: "add_customer" });
+db.system.js.remove({ _id: "add_factory" });
+
+// új function, megadott adatokkal való factory létrehozásához
+db.system.js.save(
+    {
+        _id: "add_factory",
+        value: function (id, name, place, foundation_date, allapot){
+            db.factory.insertOne({
+                _id: id,
+                name: name,
+                place: place,
+                foundation_date: foundation_date,
+                allapot: allapot
+            })
+        }
+    }
+)
+
+//új function, customer létrehozására, idegenkulcs megadásával is
+db.system.js.save(
+    {
+        _id: "add_customer",
+        value: function (id, name, origin, postalCode, street, factory_id){
+            db.customers.insertOne({
+                _id: id,
+                name: name,
+                origin: origin,
+                place: {
+                    postalcode: postalCode,
+                    street: street
+                },
+                factory_id: factory_id
+            })
+        }
+    }
+)
+
+//tárolt függvény arra, hogy megadott origin alapján kikeresse az adott customere-ket
+db.system.js.save(
+    {
+        _id: "getCustomersByOrigin",
+        value: function (origin){
+            var q = db.customers.find({
+                origin: origin
+            });
+            while(q.hasNext()){
+                print(tojson(q.next()));
+            }
+        }
+    }
+)
+
+//function, amely kiírja mely customerek tartoznak az egyes gyárhoz
+function printCustomersForFactory(factoryId) {
+    db.factory.aggregate([
+        { $match: { "_id": factoryId } },
+        { $lookup: {
+            from: "customers",
+            localField: "customer_id",
+            foreignField: "_id",
+            as: "customers"
+        }},
+        { $unwind: "$customers" },
+        { $project: { "factory_name": "$name", "customer_names": "$customers.name" }}
+    ]).forEach(function(doc) {
+        print("A(z) " + doc.factory_name + " gyárhoz tartozó ügyfelek: " + doc.customer_names);
+    });
+}
+
+//minden factoryhez adjunk hozzá egy mezőt "price" néven, ami a felbecsült értéket jelzi
+db.factory.updateMany({}, { $set: { price: 500000 } });
+
+//function, amely a "túl_régi" állapotú gyárak árát 25%-al csökkenti
+db.factory.find().forEach(
+    function(obj){
+        if(obj.allapot == "tul_regi"){
+            db.factory.update({
+                _id: obj._id,
+            }, {
+                $mul : {price : 0.75}
+            });
+        }
+    }
+)
+
+//számoljuk meg azon gyárak számát, mely ára kevesebb, mint 500000
+db.factory.find({"$where": function(){
+    if(this.price < 500000)
+        return true;
+    else
+        return false;
+}})
+
+//írassuk ki place szerint az átlagárakat a factory collectionnél
+db.factory.aggregate(
+    {
+        $group : {"_id": "$place", "avgprice" : {"$avg": "$price"}}
+    }
+)
+
+//hány factory rendelkezik helyenként "tul_regi" státusszal
+db.factory.aggregate([
+  { $match: { status: "tul_regi" } }, 
+  { $group: { _id: "$type", count: { $sum: 1 } } },
+  { $sort: { count: -1 } } 
+])
+
+db.factory.aggregate([
+    { 
+        $match: { "allapot": "tul_regi" } 
+    },
+    {
+        $group: {"_id": "$place", "db": { $sum: 1 }}
+    }, 
+    {
+        $sort: {"db": -1}
+    }
+])
+
+//scriptek betöltése
+db.loadServerScripts();
+
+//functionek tesztelése
+add_factory("555", "inserted_with_function", "hungary", "2022.02.02", "új");
+add_customer("c111", "customer_name", "customer_origin", "12345", "Example Street", ["001", "002"]);
+getCustomersByOrigin("hungary");
+printCustomersForFactory("004");
